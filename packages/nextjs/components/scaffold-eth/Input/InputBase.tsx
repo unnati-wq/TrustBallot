@@ -6,6 +6,7 @@ type InputBaseProps<T> = CommonInputProps<T> & {
   prefix?: ReactNode;
   suffix?: ReactNode;
   reFocus?: boolean;
+  type?: "text" | "number" | "password" | "date";
 };
 
 export const InputBase = <T extends { toString: () => string } | undefined = string>({
@@ -18,6 +19,7 @@ export const InputBase = <T extends { toString: () => string } | undefined = str
   prefix,
   suffix,
   reFocus,
+  type,
 }: InputBaseProps<T>) => {
   const inputReft = useRef<HTMLInputElement>(null);
 
@@ -50,6 +52,7 @@ export const InputBase = <T extends { toString: () => string } | undefined = str
     <div className={`flex border-2 border-base-300 bg-base-200 rounded-full text-accent ${modifier}`}>
       {prefix}
       <input
+        type={type}
         className="input input-ghost focus-within:border-transparent focus:outline-none focus:bg-transparent focus:text-gray-400 h-[2.2rem] min-h-[2.2rem] px-4 border w-full font-medium placeholder:text-accent/50 text-gray-400"
         placeholder={placeholder}
         name={name}
