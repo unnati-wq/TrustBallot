@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { NewVotingStateContext } from "./_context";
+import { NewVotingStateContext, Option } from "./_context";
 import { NextPage } from "next";
 import { Descriptions, InputGroup } from "~~/components/common";
 import { AddressInput, InputBase } from "~~/components/scaffold-eth";
@@ -7,6 +7,8 @@ import { AddressInput, InputBase } from "~~/components/scaffold-eth";
 export const NewVoting: NextPage = () => {
   const { state, dispatch } = useContext(NewVotingStateContext);
   const [address, setAddress] = useState("");
+  const [optionName, setOptionName] = useState("");
+  const [optionDescription, setOptionDescription] = useState("");
 
   const handleNameChange = (value: string) => {
     dispatch({ type: "SET_NAME", payload: value });
@@ -28,17 +30,20 @@ export const NewVoting: NextPage = () => {
     dispatch({ type: "REMOVE_ADDRESS", payload: value });
   };
 
-  /*
-  const addOption = (value: string) => {
+  const addOption = (value: Option) => {
     dispatch({ type: "ADD_OPTION", payload: value });
   };
-  */
+
+  const removeOption = (value: string) => {
+    dispatch({ type: "REMOVE_OPTION", payload: value });
+  };
 
   const items = [
     { label: "Name", value: state.name },
     { label: "Description", value: state.description },
     { label: "Date End", value: state.dateEnd },
     { label: "Allowed Addresses (Voters)", value: state.addresses.join(", ") },
+    { label: "Options/ Candidates", value: state.options.map(o => o.name).join(", ") },
   ];
 
   return (
@@ -57,6 +62,34 @@ export const NewVoting: NextPage = () => {
             <InputGroup label="Date End">
               <InputBase type="date" value={state.dateEnd} onChange={handleDateChange}></InputBase>
             </InputGroup>
+          </div>
+          <div className="mb-10">
+            <h3 className="text-3xl font-bold mb-3">Options</h3>
+            <div className="flex items-center gap-2 w-full mb-3">
+              <InputBase placeholder="Name" value={optionName} onChange={setOptionName} />
+              <InputBase placeholder="Description" value={optionDescription} onChange={setOptionDescription} />
+              <button
+                className="bg-primary px-5 py-3 rounded-full"
+                onClick={() => {
+                  setOptionName("");
+                  setOptionDescription("");
+                  addOption({ name: optionName, description: optionDescription });
+                }}
+              >
+                Add
+              </button>
+            </div>
+            {state.options.map((option, index) => (
+              <div key={index} className="flex">
+                <InputGroup>
+                  <InputBase value={option.name} disabled onChange={v => console.log(v)}></InputBase>
+                  <InputBase value={option.description} disabled onChange={v => console.log(v)}></InputBase>
+                </InputGroup>
+                <button className="bg-primary px-5 py-3 rounded-full" onClick={() => removeOption(option.name)}>
+                  Delete
+                </button>
+              </div>
+            ))}
           </div>
           <div>
             <h3 className="text-3xl font-bold mb-3">Voters</h3>

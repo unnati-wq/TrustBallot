@@ -1,11 +1,16 @@
 import { createContext, useReducer } from "react";
 
+export type Option = {
+  name: string;
+  description: string;
+};
+
 interface NewVotingState {
   name: string;
   dateEnd: string;
   description: string;
   addresses: string[];
-  options: string[];
+  options: Option[];
 }
 
 interface Action {
@@ -43,6 +48,8 @@ const reducer = (state: NewVotingState, action: Action) => {
       return { ...state, addresses: state.addresses.filter(addr => addr !== action.payload) };
     case "ADD_OPTION":
       return { ...state, options: [...state.options, action.payload] };
+    case "REMOVE_OPTION":
+      return { ...state, options: state.options.filter(option => option.name !== action.payload) };
     default:
       return state;
   }
