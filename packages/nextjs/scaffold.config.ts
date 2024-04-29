@@ -6,6 +6,7 @@ export type ScaffoldConfig = {
   alchemyApiKey: string;
   walletConnectProjectId: string;
   onlyLocalBurnerWallet: boolean;
+  walletAutoConnect: boolean;
 };
 
 const scaffoldConfig = {
@@ -27,7 +28,7 @@ const scaffoldConfig = {
   // It's recommended to store it in an env variable:
   // .env.local for local testing, and in the Vercel/system env config for live apps.
   walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "3a8170812b534d0ff9d794f19a901d64",
-
+  walletAutoConnect: true,
   // Only show the Burner Wallet when running on hardhat network
   onlyLocalBurnerWallet: true,
 } as const satisfies ScaffoldConfig;
