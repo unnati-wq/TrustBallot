@@ -39,6 +39,8 @@ const reducer = (state: NewVotingState, action: Action) => {
       return { ...state, description: action.payload };
     case "ADD_ADDRESS":
       return { ...state, addresses: [...state.addresses, action.payload] };
+    case "REMOVE_ADDRESS":
+      return { ...state, addresses: state.addresses.filter(addr => addr !== action.payload) };
     case "ADD_OPTION":
       return { ...state, options: [...state.options, action.payload] };
     default:
