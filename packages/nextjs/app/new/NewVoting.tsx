@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { NewVotingStateContext, Option } from "./_context";
 import { NextPage } from "next";
 import { Descriptions, InputGroup } from "~~/components/common";
@@ -38,6 +38,16 @@ export const NewVoting: NextPage = () => {
     dispatch({ type: "REMOVE_OPTION", payload: value });
   };
 
+  const isFormValid = useMemo(() => {
+    return state.name && state.description && state.dateEnd && state.addresses.length > 0 && state.options.length > 0;
+  }, [state.addresses.length, state.dateEnd, state.description, state.name, state.options.length]);
+
+  const handleSubmit = () => {
+    if (isFormValid) {
+      console.log(state);
+    }
+  };
+
   const items = [
     { label: "Name", value: state.name },
     { label: "Description", value: state.description },
@@ -48,7 +58,7 @@ export const NewVoting: NextPage = () => {
 
   return (
     <div className="p-8">
-      <h2 className="text-4xl font-bold mb-5">Voting Voting</h2>
+      <h2 className="text-4xl font-bold mb-5">New Voting</h2>
       <div className="flex gap-5">
         <div className="p-8 bg-gray-200 dark:bg-slate-800 rounded-xl md:w-1/2">
           <div className="mb-10">
@@ -120,6 +130,13 @@ export const NewVoting: NextPage = () => {
         <div className="p-8 h-fit bg-gray-200 dark:bg-slate-800 rounded-xl md:w-1/2">
           <h3 className="text-3xl font-bold">Review</h3>
           <Descriptions items={items} />
+          <button
+            disabled={!isFormValid}
+            onClick={handleSubmit}
+            className="float-end mt-5 bg-primary px-5 py-3 rounded-full"
+          >
+            Create
+          </button>
         </div>
       </div>
     </div>
