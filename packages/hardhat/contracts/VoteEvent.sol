@@ -48,13 +48,16 @@ contract VoteEvent {
     function createVotingEvent(
         string memory _name,
         string memory _description,
-        uint _deadline
-
+        uint _deadline,
+        address[] memory _voters
+        //Candidate[] memory _candidates
     ) public {
         name = _name;
         description= _description;
         complete = false;
-        deadline =  deadline;
+        deadline = _deadline;
+        voters = _voters;
+        //candidates = _candidates;
         emit VotingEventCreated(msg.sender, _deadline);
     }
 
