@@ -15,7 +15,7 @@ const Home: NextPage = () => {
               Create and participate in voting rounds that are 100% trusted and censorship resistant
             </span>
             <br />
-            <Link className="bg-primary px-5 py-3 rounded-full" href="new">
+            <Link className="bg-primary px-5 py-3 rounded-full inline-block mt-5" href="new">
               Get Started
             </Link>
           </div>

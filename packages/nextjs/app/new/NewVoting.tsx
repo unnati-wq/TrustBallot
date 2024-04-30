@@ -1,5 +1,4 @@
 import { useContext, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { NewVotingStateContext, Option } from "./_context";
 import { NextPage } from "next";
 import { Descriptions, InputGroup } from "~~/components/common";
@@ -12,7 +11,6 @@ export const NewVoting: NextPage = () => {
   const [optionName, setOptionName] = useState("");
   const [optionDescription, setOptionDescription] = useState("");
   const { writeContractAsync: writeEventFactoryAsync } = useScaffoldWriteContract("EventFactory");
-  const router = useRouter();
 
   const handleNameChange = (value: string) => {
     dispatch({ type: "SET_NAME", payload: value });
@@ -48,30 +46,43 @@ export const NewVoting: NextPage = () => {
 
   const createVoting = async () => {
     try {
-      await writeEventFactoryAsync(
-        {
-          functionName: "createEvent",
-          args: [
-            state.name,
-            state.description,
-            BigInt(Math.floor(new Date(state.dateEnd).getTime() / 1000)),
-            state.addresses,
-          ],
-        },
-        {
-          onBlockConfirmation: () => {
-            router.push("/");
-          },
-        },
-      );
+      await writeEventFactoryAsync({
+        functionName: "createEvent",
+        args: [
+          state.name,
+          state.description,
+          BigInt(Math.floor(new Date(state.dateEnd).getTime() / 1000)),
+          state.addresses,
+        ],
+      });
     } catch (e) {
-      console.error("Error setting greeting:", e);
+      console.error("Error creating voting event:", e);
     }
   };
 
-  const handleSubmit = () => {
+  const addCandidates = async (candidates: any, index: number) => {
+    try {
+      if (candidates[index]) {
+        console.log("Adding candidate", candidates[index]);
+        await writeEventFactoryAsync(
+          {
+            functionName: "addCandidates",
+            args: [candidates[index].name, candidates[index].description],
+          },
+          {
+            onBlockConfirmation: () => addCandidates(candidates, index + 1),
+          },
+        );
+      }
+    } catch (e) {
+      console.error("Error creating voting event:", e);
+    }
+  };
+
+  const handleSubmit = async () => {
     if (isFormValid) {
-      createVoting();
+      await createVoting();
+      await addCandidates(state.options, 0);
     }
   };
 
