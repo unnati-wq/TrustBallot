@@ -14,7 +14,7 @@ import "./VoteEvent.sol";
  */
 contract EventFactory {
 
-    struct Candidate{
+    struct Candidate {
         string name;
         string description;
         uint256 votes;
@@ -23,11 +23,11 @@ contract EventFactory {
     address[] deployedEvents;
     mapping(address => address) eventOwner;
 
-    function createEvent(string memory name, string memory description, uint time) public{
+    function createEvent(string memory name, string memory description, uint time, address[] memory voters) public{
         address newEvent = address(new VoteEvent(msg.sender));
         eventOwner[msg.sender] = newEvent;
         deployedEvents.push(newEvent);
-        VoteEvent(newEvent).createVotingEvent(name, description, time);
+        VoteEvent(newEvent).createVotingEvent(name, description, time, voters);
     }
 
     function addVoters(address voter) public{

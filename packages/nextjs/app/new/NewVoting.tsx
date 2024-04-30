@@ -1,14 +1,18 @@
 import { useContext, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { NewVotingStateContext, Option } from "./_context";
 import { NextPage } from "next";
 import { Descriptions, InputGroup } from "~~/components/common";
 import { AddressInput, InputBase } from "~~/components/scaffold-eth";
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 export const NewVoting: NextPage = () => {
   const { state, dispatch } = useContext(NewVotingStateContext);
   const [address, setAddress] = useState("");
   const [optionName, setOptionName] = useState("");
   const [optionDescription, setOptionDescription] = useState("");
+  const { writeContractAsync: writeEventFactoryAsync } = useScaffoldWriteContract("EventFactory");
+  const router = useRouter();
 
   const handleNameChange = (value: string) => {
     dispatch({ type: "SET_NAME", payload: value });
@@ -42,9 +46,32 @@ export const NewVoting: NextPage = () => {
     return state.name && state.description && state.dateEnd && state.addresses.length > 0 && state.options.length > 0;
   }, [state.addresses.length, state.dateEnd, state.description, state.name, state.options.length]);
 
+  const createVoting = async () => {
+    try {
+      await writeEventFactoryAsync(
+        {
+          functionName: "createEvent",
+          args: [
+            state.name,
+            state.description,
+            BigInt(Math.floor(new Date(state.dateEnd).getTime() / 1000)),
+            state.addresses,
+          ],
+        },
+        {
+          onBlockConfirmation: () => {
+            router.push("/");
+          },
+        },
+      );
+    } catch (e) {
+      console.error("Error setting greeting:", e);
+    }
+  };
+
   const handleSubmit = () => {
     if (isFormValid) {
-      console.log(state);
+      createVoting();
     }
   };
 
