@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { VotingList } from "./VotingList";
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {
@@ -20,6 +21,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </div>
+      <VotingList></VotingList>
     </>
   );
 };
