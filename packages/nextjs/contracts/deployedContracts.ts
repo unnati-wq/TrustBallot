@@ -103,9 +103,41 @@ const deployedContracts = {
           name: "getDeployedEvents",
           outputs: [
             {
-              internalType: "address[]",
+              components: [
+                {
+                  internalType: "address",
+                  name: "deployedAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "description",
+                  type: "string",
+                },
+                {
+                  internalType: "bool",
+                  name: "complete",
+                  type: "bool",
+                },
+                {
+                  internalType: "uint256",
+                  name: "deadline",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct EventFactory.VotingEvent[]",
               name: "",
-              type: "address[]",
+              type: "tuple[]",
             },
           ],
           stateMutability: "view",

@@ -22,7 +22,7 @@ export const VotingCard = ({ name, description, endDate, host }: Props) => {
           <span className="text-md">{host}</span>
         </div>
       </div>
-      <span className="text-sm">Ends: {endDate}</span>
+      <span className="text-sm">Ends: {new Date(parseInt(endDate) * 1000).toDateString()}</span>
     </div>
   );
 };

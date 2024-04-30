@@ -20,13 +20,23 @@ contract EventFactory {
         uint256 votes;
     }
 
-    address[] deployedEvents;
+    struct VotingEvent {
+        address deployedAddress;
+        address owner;
+        string name;
+        string description;
+        bool complete;
+        uint deadline;
+    }
+
+    VotingEvent[] deployedEvents;
     mapping(address => address) eventOwner;
 
     function createEvent(string memory name, string memory description, uint time, address[] memory voters) public{
         address newEvent = address(new VoteEvent(msg.sender));
         eventOwner[msg.sender] = newEvent;
-        deployedEvents.push(newEvent);
+        VotingEvent memory eventObject = VotingEvent(newEvent, msg.sender, name, description, false, time);
+        deployedEvents.push(eventObject);
         VoteEvent(newEvent).createVotingEvent(name, description, time, voters);
     }
 
@@ -38,7 +48,7 @@ contract EventFactory {
         VoteEvent(eventOwner[msg.sender]).addCandidate(name, description);
     }
 
-    function getDeployedEvents() public view returns(address[] memory){
+    function getDeployedEvents() public view returns(VotingEvent[] memory){
         return deployedEvents;
     }
 
